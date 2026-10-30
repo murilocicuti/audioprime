@@ -18,7 +18,7 @@ fi
 
 for ARCH in arm64 x86_64; do
     swiftc -O -swift-version 5 \
-        -target "$ARCH-apple-macosx26.0" \
+        -target "$ARCH-apple-macosx14.4" \
         -sdk "$(xcrun --show-sdk-path)" \
         "${OVERLAY_ARGS[@]}" \
         -module-name AudioPrime -parse-as-library \
@@ -28,6 +28,7 @@ done
 lipo -create build/arch/AudioPrime-* -output "$APP/Contents/MacOS/AudioPrime"
 
 cp Resources/Info.plist "$APP/Contents/Info.plist"
+cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 if [[ -n "${VERSION:-}" ]]; then
     /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" "$APP/Contents/Info.plist"
 fi

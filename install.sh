@@ -13,8 +13,13 @@ say() { printf '\033[1m==>\033[0m %s\n' "$1"; }
 fail() { printf '\033[31mErro:\033[0m %s\n' "$1" >&2; exit 1; }
 
 [[ "$(uname -s)" == "Darwin" ]] || fail "o AudioPrime só funciona no macOS."
-MAJOR="$(sw_vers -productVersion | cut -d. -f1)"
-(( MAJOR >= 26 )) || fail "o AudioPrime precisa do macOS 26 ou mais recente (você tem $(sw_vers -productVersion))."
+# Captura de áudio por app (process taps) com pedido de permissão confiável: macOS 14.4+.
+OS_VERSION="$(sw_vers -productVersion)"
+IFS=. read -r MAJOR MINOR _ <<< "$OS_VERSION"
+if (( MAJOR < 14 || (MAJOR == 14 && ${MINOR:-0} < 4) )); then
+    fail "o AudioPrime precisa do macOS 14.4 (Sonoma) ou mais recente. Seu Mac está no $OS_VERSION.
+       Atualize em Ajustes do Sistema › Geral › Atualização de Software e tente de novo."
+fi
 
 # /Applications quando o usuário pode escrever lá (administradores); senão ~/Applications.
 if [[ -w /Applications ]]; then DEST_DIR="/Applications"; else DEST_DIR="$HOME/Applications"; fi
@@ -47,6 +52,10 @@ ditto -x -k "$TMP/AudioPrime.zip" "$TMP" || fail "o arquivo baixado está corrom
 quit_running
 say "Instalando em $DEST_DIR..."
 mkdir -p "$DEST_DIR"
+# Remove cópias antigas em outro local para não ficar com dois AudioPrime no Mac.
+for OLD in "/Applications/$APP_NAME" "$HOME/Applications/$APP_NAME" "$HOME/Downloads/$APP_NAME"; do
+    if [[ "$OLD" != "$DEST" && -d "$OLD" && -w "$(dirname "$OLD")" ]]; then rm -rf "$OLD"; fi
+done
 rm -rf "$DEST"
 ditto "$TMP/$APP_NAME" "$DEST"
 # O app não é assinado pela Apple; sem a marca de quarentena o macOS o abre sem bloquear.

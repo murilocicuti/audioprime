@@ -24,6 +24,15 @@ final class MixerStore: ObservableObject {
         didSet { UserDefaults.standard.set(isEnabled, forKey: Keys.enabled); reconcile() }
     }
     @Published var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
+    /// Outros apps que também interceptam áudio por app e podem disputar o mesmo som.
+    @Published private(set) var conflictingApps: [String] = []
+
+    private static let knownMixers: [String: String] = [
+        "com.rogueamoeba.soundsource": "SoundSource",
+        "com.bearisdriving.BGM.App": "Background Music",
+        "com.bitgapp.eqmac": "eqMac",
+        "com.galambastwins.apoo": "Apoo",
+    ]
 
     private var taps: [String: AppTap] = [:]
     private var timer: Timer?
@@ -127,6 +136,9 @@ final class MixerStore: ObservableObject {
         defaultOutput = AudioDevices.defaultOutput()
         systemVolume = AudioDevices.volume(of: defaultOutput) ?? systemVolume
         apps = AudioProcesses.currentApps()
+        conflictingApps = NSWorkspace.shared.runningApplications
+            .compactMap { $0.bundleIdentifier.flatMap { Self.knownMixers[$0] } }
+            .sorted()
         reconcile()
     }
 
@@ -196,5 +208,9 @@ final class MixerStore: ObservableObject {
                 Task { @MainActor in self?.refresh() }
             })
         }
+        // Desfaz os taps antes de dormir; ao acordar, refresh() os recria com os dispositivos atuais.
+        observers.append(center.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in
+            Task { @MainActor in self?.shutdown() }
+        })
     }
 }

@@ -10,6 +10,14 @@ struct MixerView: View {
             systemSection
             Divider()
             appsSection
+            if !store.conflictingApps.isEmpty {
+                notice(
+                    "\(store.conflictingApps.joined(separator: ", ")) também "
+                        + (store.conflictingApps.count > 1 ? "controlam" : "controla") + " o áudio dos apps. "
+                        + "Usar os dois juntos pode deixar apps mudos ou com volume errado.",
+                    symbol: "info.circle.fill", color: .blue
+                )
+            }
             if let error = store.lastError {
                 errorBanner(error)
             }
@@ -21,7 +29,12 @@ struct MixerView: View {
     }
 
     private var header: some View {
-        HStack {
+        HStack(spacing: 8) {
+            WaveMarkShape()
+                .fill(.primary)
+                .frame(width: 22, height: 22 * WaveMark.aspect)
+                .opacity(store.isEnabled ? 1 : 0.35)
+                .animation(.easeOut(duration: 0.2), value: store.isEnabled)
             Text("AudioPrime").font(.headline)
             Spacer()
             Toggle("Controles de som", isOn: $store.isEnabled)
@@ -93,6 +106,13 @@ struct MixerView: View {
         }
     }
 
+    private func notice(_ message: String, symbol: String, color: Color) -> some View {
+        HStack(alignment: .top) {
+            Image(systemName: symbol).foregroundStyle(color)
+            Text(message).font(.caption).fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
     private func errorBanner(_ message: String) -> some View {
         HStack(alignment: .top) {
             Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.yellow)
@@ -116,6 +136,15 @@ struct MixerView: View {
                 Button("Sair") { NSApp.terminate(nil) }
             }
             .buttonStyle(.link)
+            HStack(spacing: 4) {
+                Text("v\(Brand.version) · Feito por")
+                Link(Brand.author, destination: Brand.authorURL)
+                Spacer()
+                Link("GitHub", destination: Brand.repositoryURL)
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .padding(.top, 2)
         }
     }
 }

@@ -12,7 +12,7 @@ struct AudioPrimeApp: App {
                 .environmentObject(store)
                 .onAppear { delegate.store = store }
         } label: {
-            Image(systemName: store.isEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+            Image(nsImage: Brand.menuBarImage(enabled: store.isEnabled))
         }
         .menuBarExtraStyle(.window)
     }
@@ -20,6 +20,14 @@ struct AudioPrimeApp: App {
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     weak var store: MixerStore?
+
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Duas instâncias criariam taps concorrentes no mesmo app; a mais nova sai.
+        let me = NSRunningApplication.current
+        let others = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier ?? "")
+            .filter { $0.processIdentifier != me.processIdentifier }
+        if !others.isEmpty { exit(0) }
+    }
 
     func applicationWillTerminate(_ notification: Notification) {
         // Desfaz os taps para que nenhum app fique mudo depois que saímos.
