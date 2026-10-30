@@ -247,9 +247,9 @@ func drawSocialPreview() -> CGContext {
         _ = drawText(ctx, text, font: font, color: color, at: CGPoint(x: (width - w) / 2, y: y), kern: kern)
     }
     centered("AudioPrime", font("AvenirNext-DemiBold", 84, fallbackWeight: .semibold), Palette.paper, y: 220, kern: -1)
-    centered("O volume de cada app, do seu jeito.", font("AvenirNext-Regular", 34, fallbackWeight: .regular),
+    centered("Every app’s volume, your way.", font("AvenirNext-Regular", 34, fallbackWeight: .regular),
              CGColor(gray: 1, alpha: 0.62), y: 160)
-    centered("Gratuito  ·  Código aberto  ·  macOS", font("AvenirNext-Medium", 22, fallbackWeight: .medium),
+    centered("Free  ·  Open source  ·  macOS", font("AvenirNext-Medium", 22, fallbackWeight: .medium),
              CGColor(gray: 1, alpha: 0.38), y: 92, kern: 1.5)
     return ctx
 }

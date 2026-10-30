@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>pt-BR</string>
+	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>AudioPrime</string>
 	<key>CFBundleExecutable</key>
@@ -12,6 +12,13 @@
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.murilo.audioprime</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>pt</string>
+		<string>de</string>
+		<string>es</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>AudioPrime</string>
 	<key>CFBundlePackageType</key>
@@ -27,10 +34,10 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAudioCaptureUsageDescription</key>
-	<string>O AudioPrime precisa acessar o áudio do sistema para ajustar o volume e a saída de cada app. O áudio é processado ao vivo no seu Mac e nunca é gravado.</string>
+	<string>AudioPrime needs access to system audio to adjust the volume and output of each app. Audio is processed live on your Mac and is never recorded.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2026 Murilo Cicuti. Licença MIT.</string>
+	<string>© 2026 Murilo Cicuti. MIT License.</string>
 </dict>
 </plist>

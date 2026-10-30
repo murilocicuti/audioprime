@@ -3,13 +3,14 @@ import Foundation
 
 struct AudioError: LocalizedError {
     let status: OSStatus
-    let action: String
-    var errorDescription: String? { "Falha ao \(action) (erro \(status))." }
+    /// Frase completa e já traduzida descrevendo o que falhou.
+    let message: String
+    var errorDescription: String? { "\(message) (\(status))" }
 }
 
 @discardableResult
-func check(_ status: OSStatus, _ action: String) throws -> OSStatus {
-    guard status == noErr else { throw AudioError(status: status, action: action) }
+func check(_ status: OSStatus, _ message: @autoclosure () -> String) throws -> OSStatus {
+    guard status == noErr else { throw AudioError(status: status, message: message()) }
     return status
 }
 
@@ -68,7 +69,7 @@ enum CA {
         var value = value
         let size = UInt32(MemoryLayout<T>.size)
         try withUnsafePointer(to: &value) { pointer in
-            _ = try check(AudioObjectSetPropertyData(object, &address, 0, nil, size, pointer), "alterar propriedade de áudio")
+            _ = try check(AudioObjectSetPropertyData(object, &address, 0, nil, size, pointer), String(localized: "Couldn’t change an audio setting."))
         }
     }
 

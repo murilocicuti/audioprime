@@ -1,0 +1,29 @@
+/* AudioPrime */
+
+"Sound controls" = "Tonsteuerung";
+"Turn per-app volume and output on or off" = "Lautstärke und Ausgabe pro App ein- oder ausschalten";
+"Output" = "Ausgabe";
+"Apps" = "Apps";
+"No apps are playing audio." = "Keine App gibt gerade Audio wieder.";
+"%@ also controls app audio. Using both at once can leave apps muted or at the wrong volume." = "%@ steuert ebenfalls das Audio von Apps. Wenn beide gleichzeitig laufen, können Apps stumm sein oder die falsche Lautstärke haben.";
+"%@ also control app audio. Using both at once can leave apps muted or at the wrong volume." = "%@ steuern ebenfalls das Audio von Apps. Wenn beide gleichzeitig laufen, können Apps stumm sein oder die falsche Lautstärke haben.";
+"Open at login" = "Bei der Anmeldung öffnen";
+"Reset volumes and outputs" = "Lautstärken und Ausgaben zurücksetzen";
+"Quit" = "Beenden";
+"v%@ · Made by" = "v%@ · Erstellt von";
+"Mute" = "Stummschalten";
+"Unmute" = "Ton einschalten";
+"System default" = "Systemstandard";
+"Default" = "Standard";
+"Disconnected" = "Getrennt";
+"No output" = "Keine Ausgabe";
+"Couldn’t change the output. Try in System Settings." = "Die Ausgabe konnte nicht geändert werden. Versuche es in den Systemeinstellungen.";
+"Couldn’t change Open at login: %@" = "„Bei der Anmeldung öffnen“ konnte nicht geändert werden: %@";
+"%@: %@ Check audio access in System Settings › Privacy & Security." = "%@: %@ Prüfe den Audiozugriff unter Systemeinstellungen › Datenschutz & Sicherheit.";
+"System Sounds" = "Systemtöne";
+"AudioPrime (off)" = "AudioPrime (aus)";
+"Couldn’t change an audio setting." = "Eine Audioeinstellung konnte nicht geändert werden.";
+"Couldn’t capture this app’s audio." = "Das Audio dieser App konnte nicht abgegriffen werden.";
+"Couldn’t connect to the audio output." = "Keine Verbindung zur Audioausgabe möglich.";
+"Couldn’t prepare audio processing." = "Die Audioverarbeitung konnte nicht vorbereitet werden.";
+"Couldn’t start audio." = "Audio konnte nicht gestartet werden.";

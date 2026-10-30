@@ -1,0 +1,29 @@
+/* AudioPrime */
+
+"Sound controls" = "Sound controls";
+"Turn per-app volume and output on or off" = "Turn per-app volume and output on or off";
+"Output" = "Output";
+"Apps" = "Apps";
+"No apps are playing audio." = "No apps are playing audio.";
+"%@ also controls app audio. Using both at once can leave apps muted or at the wrong volume." = "%@ also controls app audio. Using both at once can leave apps muted or at the wrong volume.";
+"%@ also control app audio. Using both at once can leave apps muted or at the wrong volume." = "%@ also control app audio. Using both at once can leave apps muted or at the wrong volume.";
+"Open at login" = "Open at login";
+"Reset volumes and outputs" = "Reset volumes and outputs";
+"Quit" = "Quit";
+"v%@ · Made by" = "v%@ · Made by";
+"Mute" = "Mute";
+"Unmute" = "Unmute";
+"System default" = "System default";
+"Default" = "Default";
+"Disconnected" = "Disconnected";
+"No output" = "No output";
+"Couldn’t change the output. Try in System Settings." = "Couldn’t change the output. Try in System Settings.";
+"Couldn’t change Open at login: %@" = "Couldn’t change Open at login: %@";
+"%@: %@ Check audio access in System Settings › Privacy & Security." = "%@: %@ Check audio access in System Settings › Privacy & Security.";
+"System Sounds" = "System Sounds";
+"AudioPrime (off)" = "AudioPrime (off)";
+"Couldn’t change an audio setting." = "Couldn’t change an audio setting.";
+"Couldn’t capture this app’s audio." = "Couldn’t capture this app’s audio.";
+"Couldn’t connect to the audio output." = "Couldn’t connect to the audio output.";
+"Couldn’t prepare audio processing." = "Couldn’t prepare audio processing.";
+"Couldn’t start audio." = "Couldn’t start audio.";

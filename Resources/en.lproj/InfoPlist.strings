@@ -1,0 +1,1 @@
+"NSAudioCaptureUsageDescription" = "AudioPrime needs access to system audio to adjust the volume and output of each app. Audio is processed live on your Mac and is never recorded.";

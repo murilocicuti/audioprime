@@ -1,4 +1,4 @@
-# Ao enviar uma tag vX.Y.Z, compila o app universal e publica AudioPrime.zip na release.
+# On a vX.Y.Z tag push, builds the universal app and publishes AudioPrime.zip to the release.
 name: Release
 
 on:
@@ -14,10 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Compilar
+      - name: Build
         run: VERSION="${GITHUB_REF_NAME#v}" ./scripts/build.sh
 
-      - name: Publicar release
+      - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

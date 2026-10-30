@@ -44,7 +44,7 @@ enum AudioProcesses {
                 icon = owner.icon
             } else if bundleID.contains("systemsound") || processName(pid) == "systemsoundserverd" {
                 key = systemSoundsID
-                name = "Sons do sistema"
+                name = String(localized: "System Sounds")
                 icon = NSImage(systemSymbolName: "bell.fill", accessibilityDescription: nil)
             } else {
                 // Processos de sistema sem app associado (coreaudiod, etc.) ficam de fora.

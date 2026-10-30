@@ -21,11 +21,16 @@ final class MixerStore: ObservableObject {
     @Published var systemVolume: Float = 0
     @Published var lastError: String?
     @Published var isEnabled: Bool {
-        didSet { UserDefaults.standard.set(isEnabled, forKey: Keys.enabled); reconcile() }
+        didSet {
+            UserDefaults.standard.set(isEnabled, forKey: Keys.enabled)
+            menuBar.isEnabled = isEnabled
+            reconcile()
+        }
     }
     @Published var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
     /// Outros apps que também interceptam áudio por app e podem disputar o mesmo som.
     @Published private(set) var conflictingApps: [String] = []
+    let menuBar = MenuBarAnimator()
 
     private static let knownMixers: [String: String] = [
         "com.rogueamoeba.soundsource": "SoundSource",
@@ -35,6 +40,8 @@ final class MixerStore: ObservableObject {
     ]
 
     private var taps: [String: AppTap] = [:]
+    /// Apps que tocavam na última atualização, para detectar quando um novo começa.
+    private var playingApps: Set<String> = []
     private var timer: Timer?
     private var listeners: [(AudioObjectID, AudioObjectPropertyAddress, AudioObjectPropertyListenerBlock)] = []
     private var observers: [NSObjectProtocol] = []
@@ -46,6 +53,7 @@ final class MixerStore: ObservableObject {
 
     init() {
         isEnabled = UserDefaults.standard.object(forKey: Keys.enabled) as? Bool ?? true
+        menuBar.isEnabled = isEnabled
         if let data = UserDefaults.standard.data(forKey: Keys.settings),
            let saved = try? JSONDecoder().decode([String: AppSetting].self, from: data) {
             settings = saved
@@ -64,7 +72,7 @@ final class MixerStore: ObservableObject {
     }
 
     var defaultOutputName: String {
-        outputs.first { $0.id == defaultOutput }?.name ?? "Nenhuma saída"
+        outputs.first { $0.id == defaultOutput }?.name ?? String(localized: "No output")
     }
 
     // MARK: - Ações
@@ -85,7 +93,7 @@ final class MixerStore: ObservableObject {
         do {
             try AudioDevices.setDefaultOutput(device.id)
         } catch {
-            lastError = "Não foi possível mudar a saída. Tente nos Ajustes do Sistema."
+            lastError = String(localized: "Couldn’t change the output. Try in System Settings.")
         }
         refresh()
     }
@@ -105,7 +113,7 @@ final class MixerStore: ObservableObject {
         do {
             if enabled { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
         } catch {
-            lastError = "Não foi possível alterar o início automático: \(error.localizedDescription)"
+            lastError = String(localized: "Couldn’t change Open at login: \(error.localizedDescription)")
         }
         launchAtLogin = SMAppService.mainApp.status == .enabled
     }
@@ -136,6 +144,9 @@ final class MixerStore: ObservableObject {
         defaultOutput = AudioDevices.defaultOutput()
         systemVolume = AudioDevices.volume(of: defaultOutput) ?? systemVolume
         apps = AudioProcesses.currentApps()
+        let playing = Set(apps.filter { $0.isPlaying && $0.id != AudioProcesses.systemSoundsID }.map(\.id))
+        if !playing.subtracting(playingApps).isEmpty { menuBar.pulse() }
+        playingApps = playing
         conflictingApps = NSWorkspace.shared.runningApplications
             .compactMap { $0.bundleIdentifier.flatMap { Self.knownMixers[$0] } }
             .sorted()
@@ -166,7 +177,7 @@ final class MixerStore: ObservableObject {
             do {
                 taps[app.id] = try AppTap(processObjects: processes, outputUID: outputUID, gain: gain)
             } catch {
-                lastError = "\(app.name): \(error.localizedDescription) Verifique a permissão de áudio em Ajustes do Sistema › Privacidade."
+                lastError = String(localized: "\(app.name): \(error.localizedDescription) Check audio access in System Settings › Privacy & Security.")
             }
         }
 

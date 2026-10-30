@@ -11,12 +11,7 @@ struct MixerView: View {
             Divider()
             appsSection
             if !store.conflictingApps.isEmpty {
-                notice(
-                    "\(store.conflictingApps.joined(separator: ", ")) também "
-                        + (store.conflictingApps.count > 1 ? "controlam" : "controla") + " o áudio dos apps. "
-                        + "Usar os dois juntos pode deixar apps mudos ou com volume errado.",
-                    symbol: "info.circle.fill", color: .blue
-                )
+                notice(conflictMessage, symbol: "info.circle.fill", color: .blue)
             }
             if let error = store.lastError {
                 errorBanner(error)
@@ -37,17 +32,17 @@ struct MixerView: View {
                 .animation(.easeOut(duration: 0.2), value: store.isEnabled)
             Text("AudioPrime").font(.headline)
             Spacer()
-            Toggle("Controles de som", isOn: $store.isEnabled)
+            Toggle("Sound controls", isOn: $store.isEnabled)
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .labelsHidden()
-                .help("Ativar ou desativar o volume e a saída por app")
+                .help("Turn per-app volume and output on or off")
         }
     }
 
     private var systemSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Saída").font(.subheadline).foregroundStyle(.secondary)
+            Text("Output").font(.subheadline).foregroundStyle(.secondary)
             HStack(spacing: 8) {
                 Image(systemName: "speaker.fill").foregroundStyle(.secondary).frame(width: 20)
                 Slider(value: Binding(
@@ -80,7 +75,7 @@ struct MixerView: View {
             Text("Apps").font(.subheadline).foregroundStyle(.secondary)
             let apps = store.visibleApps
             if apps.isEmpty {
-                Text("Nenhum app está reproduzindo áudio.")
+                Text("No apps are playing audio.")
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 8)
@@ -97,6 +92,13 @@ struct MixerView: View {
     }
 
     private static let maxRowsWithoutScroll = 6
+
+    private var conflictMessage: String {
+        let names = store.conflictingApps.joined(separator: ", ")
+        return store.conflictingApps.count > 1
+            ? String(localized: "\(names) also control app audio. Using both at once can leave apps muted or at the wrong volume.")
+            : String(localized: "\(names) also controls app audio. Using both at once can leave apps muted or at the wrong volume.")
+    }
 
     private func appList(_ apps: [AudioApp]) -> some View {
         VStack(spacing: 12) {
@@ -125,19 +127,19 @@ struct MixerView: View {
 
     private var footer: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Toggle("Abrir ao iniciar sessão", isOn: Binding(
+            Toggle("Open at login", isOn: Binding(
                 get: { store.launchAtLogin },
                 set: { store.setLaunchAtLogin($0) }
             ))
             .toggleStyle(.checkbox)
             HStack {
-                Button("Redefinir volumes e saídas") { store.resetAll() }
+                Button("Reset volumes and outputs") { store.resetAll() }
                 Spacer()
-                Button("Sair") { NSApp.terminate(nil) }
+                Button("Quit") { NSApp.terminate(nil) }
             }
             .buttonStyle(.link)
             HStack(spacing: 4) {
-                Text("v\(Brand.version) · Feito por")
+                Text("v\(Brand.version) · Made by")
                 Link(Brand.author, destination: Brand.authorURL)
                 Spacer()
                 Link("GitHub", destination: Brand.repositoryURL)
@@ -170,7 +172,7 @@ private struct AppRow: View {
                         .frame(width: 20)
                 }
                 .buttonStyle(.plain)
-                .help(setting.muted ? "Ativar som" : "Silenciar")
+                .help(setting.muted ? "Unmute" : "Mute")
                 Slider(value: Binding(
                     get: { Double(setting.muted ? 0 : setting.volume) },
                     set: { store.setVolume(Float($0), for: app) }
@@ -188,9 +190,9 @@ private struct AppRow: View {
                 store.setOutput(nil, for: app)
             } label: {
                 if setting.outputUID == nil {
-                    Label("Padrão do sistema", systemImage: "checkmark")
+                    Label("System default", systemImage: "checkmark")
                 } else {
-                    Text("Padrão do sistema")
+                    Text("System default")
                 }
             }
             Divider()
@@ -213,8 +215,8 @@ private struct AppRow: View {
     }
 
     private func outputLabel(_ setting: AppSetting) -> String {
-        guard let uid = setting.outputUID else { return "Padrão" }
-        return store.outputs.first { $0.uid == uid }?.name ?? "Desconectado"
+        guard let uid = setting.outputUID else { return String(localized: "Default") }
+        return store.outputs.first { $0.uid == uid }?.name ?? String(localized: "Disconnected")
     }
 }
 

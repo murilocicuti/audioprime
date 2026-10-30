@@ -12,9 +12,18 @@ struct AudioPrimeApp: App {
                 .environmentObject(store)
                 .onAppear { delegate.store = store }
         } label: {
-            Image(nsImage: Brand.menuBarImage(enabled: store.isEnabled))
+            MenuBarLabel(animator: store.menuBar)
         }
         .menuBarExtraStyle(.window)
+    }
+}
+
+/// Observa só o animador, para que os quadros da animação não redesenhem o painel.
+private struct MenuBarLabel: View {
+    @ObservedObject var animator: MenuBarAnimator
+
+    var body: some View {
+        Image(nsImage: animator.image)
     }
 }
 

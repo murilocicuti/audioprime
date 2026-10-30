@@ -12,13 +12,14 @@ enum Brand {
 
     /// Ícone da barra de menus: a marca como imagem-modelo (o macOS ajusta a cor ao tema).
     /// Desativado, vira só o contorno.
-    static func menuBarImage(enabled: Bool) -> NSImage {
+    static func menuBarImage(enabled: Bool, motion: WaveMark.Motion? = nil) -> NSImage {
         let height: CGFloat = 15
         let size = NSSize(width: (height / WaveMark.aspect).rounded(), height: height)
         let image = NSImage(size: size, flipped: true) { rect in
             guard let ctx = NSGraphicsContext.current?.cgContext else { return false }
             let inset = enabled ? rect : rect.insetBy(dx: 0.6, dy: 0.6)
-            ctx.addPath(WaveMark.path(in: inset))
+            // 160 amostras bastam para ~19 pt de largura e deixam cada quadro barato.
+            ctx.addPath(WaveMark.path(in: inset, motion: motion, samples: 160))
             if enabled {
                 ctx.setFillColor(NSColor.black.cgColor)
                 ctx.fillPath()
@@ -31,7 +32,7 @@ enum Brand {
             return true
         }
         image.isTemplate = true
-        image.accessibilityDescription = enabled ? "AudioPrime" : "AudioPrime (desativado)"
+        image.accessibilityDescription = enabled ? "AudioPrime" : String(localized: "AudioPrime (off)")
         return image
     }
 }

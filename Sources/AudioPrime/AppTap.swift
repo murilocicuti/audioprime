@@ -48,7 +48,7 @@ final class AppTap {
         description.isPrivate = true
         description.muteBehavior = .mutedWhenTapped
 
-        try check(AudioHardwareCreateProcessTap(description, &tapID), "interceptar o áudio do app")
+        try check(AudioHardwareCreateProcessTap(description, &tapID), String(localized: "Couldn’t capture this app’s audio."))
 
         let aggregate: [String: Any] = [
             kAudioAggregateDeviceNameKey: "AudioPrime",
@@ -63,13 +63,13 @@ final class AppTap {
                 kAudioSubTapUIDKey: description.uuid.uuidString,
             ]],
         ]
-        try check(AudioHardwareCreateAggregateDevice(aggregate as CFDictionary, &aggregateID), "conectar a saída de áudio")
+        try check(AudioHardwareCreateAggregateDevice(aggregate as CFDictionary, &aggregateID), String(localized: "Couldn’t connect to the audio output."))
 
         let gain = self.gain
         try check(AudioDeviceCreateIOProcIDWithBlock(&ioProcID, aggregateID, queue) { _, input, _, output, _ in
             AppTap.render(input: input, output: output, gain: gain)
-        }, "preparar o processamento de áudio")
-        try check(AudioDeviceStart(aggregateID, ioProcID), "iniciar o áudio")
+        }, String(localized: "Couldn’t prepare audio processing."))
+        try check(AudioDeviceStart(aggregateID, ioProcID), String(localized: "Couldn’t start audio."))
     }
 
     func stop() {
