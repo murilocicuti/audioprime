@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>pt-BR</string>
+	<key>CFBundleDisplayName</key>
+	<string>AudioPrime</string>
+	<key>CFBundleExecutable</key>
+	<string>AudioPrime</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.murilo.audioprime</string>
+	<key>CFBundleName</key>
+	<string>AudioPrime</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>26.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSAudioCaptureUsageDescription</key>
+	<string>O AudioPrime precisa acessar o áudio do sistema para ajustar o volume e a saída de cada app. O áudio é processado ao vivo no seu Mac e nunca é gravado.</string>
+</dict>
+</plist>
